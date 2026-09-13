@@ -60,7 +60,7 @@ The LLM may propose, but the runtime must enforce.
 
 If we want to use agentic systems for enterprise-grade, consequential tasks, we have to stop treating them like helpful interns and start treating them like untrusted execution nodes. 
 
-I’ve published the `AGENTS.md` ruleset outlining the complete Universal Operational Governance ruleset in this repository. 
+I’ve published `AGENTS.md` outlining the complete Universal Operational Governance ruleset in this repository. 
 
 Explore the `/examples` directory to see gruesome autopsies of real-world failures (like the bootloader brick) and how the Zero-Trust state machine prevents them. 
 
