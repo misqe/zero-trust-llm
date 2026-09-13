@@ -24,6 +24,6 @@ Every consequential action must follow this exact loop:
 At `[HARD YIELD]`, the execution layer (Python middleware or LangGraph/Semantic Kernel) must physically cut the API stream, execute the command, and feed the raw output back into the context. 
 
 ## Repository Structure
-- **`AGENTS.md`**: The master ruleset. Add this to your agent's system prompt.
-- **`/examples`**: Real-world transcripts proving how standard agents fail (and how the Zero-Trust agent catches anomalies and yields).
-- **`/implementation`**: Architecture notes and Python pseudo-code showing how to programmatically enforce the execution boundary (`orchestrator_concept.md`).
+- [**`AGENTS.md`**](AGENTS.md): The master ruleset. Add this to your agent's system prompt.
+- [**`/examples`**](examples/): Real-world transcripts proving how standard agents fail (and how the Zero-Trust agent catches anomalies and yields).
+- [**`/implementation`**](implementation/): Architecture notes and Python pseudo-code showing how to programmatically enforce the execution boundary ([`orchestrator_concept.md`](implementation/orchestrator_concept.md)).
