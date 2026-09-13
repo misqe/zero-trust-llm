@@ -41,6 +41,6 @@ Instead of the agent blindly blasting through a 50-step IT checklist and guessin
 ```
 
 ### Why this is a Massive Success
-The LLM did not guess. It did not try to be proactive and clean the system to be "helpful." It paused the execution pipeline until the human operator stepped out of band, asked the end-user (the user) for manual confirmation, and then provided the explicit empirical evidence: `"User confirmed its not used."`
+The LLM did not guess. It did not try to be proactive and clean the system to be "helpful." It paused the execution pipeline until the human operator stepped out of band, asked the end-user for manual confirmation, and then provided the explicit empirical evidence: `"User confirmed its not used."`
 
 Only with that explicit authorization did the agent cross the execution boundary. This is the exact design goal of the Zero-Trust framework.
