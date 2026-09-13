@@ -25,5 +25,6 @@ At `[HARD YIELD]`, the execution layer (Python middleware or LangGraph/Semantic 
 
 ## Repository Structure
 - [**`AGENTS.md`**](AGENTS.md): The master ruleset. Add this to your agent's system prompt.
+- [**`MANIFESTO.md`**](MANIFESTO.md): The philosophical and technical arguments against the "Good Enough" AI paradigm.
 - [**`/examples`**](examples/): Real-world transcripts proving how standard agents fail (and how the Zero-Trust agent catches anomalies and yields).
 - [**`/implementation`**](implementation/): Architecture notes and Python pseudo-code showing how to programmatically enforce the execution boundary ([`orchestrator_concept.md`](implementation/orchestrator_concept.md)).
