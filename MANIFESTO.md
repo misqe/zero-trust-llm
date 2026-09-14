@@ -43,7 +43,7 @@ Instead of asking the model to be safe, the invariant forces the model to track 
 4. **`[EXECUTE]`**: It provides the read-only command.
 5. **`[HARD YIELD TO OPERATOR]`**: The model is mandated to instantly halt generation. 
 
-At `[HARD YIELD]`, the Python middleware (or LangGraph/Semantic Kernel orchestrator) physically cuts the API stream. It prevents the model from hallucinating a downstream outcome. The execution layer runs the command, captures the raw `stdout`/`stderr`, and injects it back into the context as a `[LIVE READ-BACK]`.
+At `[HARD YIELD]`, the Python middleware (or LangGraph/Semantic Kernel orchestrator) physically cuts the API stream. **The orchestrator does not blindly trust the LLM.** It runs the extracted command through a deterministic whitelist or requires explicit human authorization before touching the system. The execution layer safely runs the command, captures the raw `stdout`/`stderr`, and injects it back into the context as a `[LIVE READ-BACK]`.
 
 Only then is the model allowed to transition to `[INTERPRET EVIDENCE]` and evaluate if the action is `[CONFIRMED]` or if it triggered an `[INCONGRUITY ANOMALY]`.
 

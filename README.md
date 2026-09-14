@@ -12,7 +12,9 @@ Natural language governance (adding "be careful" to a system prompt) fails over 
 ## The Solution
 When a probabilistic text generator is tasked with executing deterministic state changes, you cannot rely on it to govern itself. You must strip its agency and force it into an epistemic state machine.
 
-This repository provides **AGENTS.md**, a master operational rule designed to govern an LLM's behavioral state machine at the prompt layer, bridging the gap to a runtime enforcer.
+This repository provides two components:
+1. **The Schema (`AGENTS.md`)**: A master system prompt that forces the LLM to expose its logic in a predictable, state-machine format (`[HYPOTHESIS] -> [EVIDENCE] -> [EXECUTE] -> [HARD YIELD]`). 
+2. **The Enforcer (Middleware Orchestrator)**: Because prompts always eventually fail due to context dilution, we do **not** trust the LLM to obey `AGENTS.md`. The orchestrator middleware is the true enforcer.
 
 Every consequential action must follow this exact loop:
 1. `[HYPOTHESIS]`
@@ -21,7 +23,10 @@ Every consequential action must follow this exact loop:
 4. `[EXECUTE]` (Strictly read-only diagnostic command)
 5. `[HARD YIELD TO OPERATOR]`
 
-At `[HARD YIELD]`, the execution layer (Python middleware or LangGraph/Semantic Kernel) must physically cut the API stream, execute the command, and feed the raw output back into the context. 
+At `[HARD YIELD]`, the execution layer (Python middleware, LangGraph, etc.) physically cuts the API stream. **It does not blindly execute the command.** It runs the command through a deterministic whitelist or requires an explicit human `Y/N` override before running `subprocess`. 
+
+### FAQ: What stops the LLM from outputting a destructive command?
+Nothing. The LLM will eventually hallucinate a destructive command like `[EXECUTE] rm -rf /`. But because we forced it into the `[EXECUTE]` syntax block, the middleware trivially intercepts it, runs a deterministic regex/AST check, recognizes it as a violation of the read-only invariant, and blocks the execution. The LLM is never in control of the actual terminal.
 
 ## Repository Structure
 - [**`AGENTS.md`**](AGENTS.md): The master ruleset. Add this to your agent's system prompt.

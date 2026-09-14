@@ -43,6 +43,16 @@ def extract_execute_block(text):
         return match.group(1).strip()
     return None
 
+def is_command_safe(command):
+    """
+    Deterministic validation. We DO NOT trust the LLM's claim that a command is read-only.
+    The orchestrator enforces a strict whitelist of safe, passive inspection commands.
+    """
+    # Extremely simplified example whitelist. Real systems would use AST parsing or RBAC.
+    whitelist = ["Get-Process", "Get-Service", "ls", "cat", "echo", "ping", "systeminfo"]
+    cmd_base = command.split()[0] if command else ""
+    return cmd_base in whitelist
+
 def main():
     # In a real environment, 'client' would be an instantiated OpenAI/Anthropic client.
     messages = [
@@ -57,9 +67,23 @@ def main():
     command = extract_execute_block(agent_response)
     
     if command:
-        print(f"[SYSTEM] Sandboxing execution of: {command}")
+        print(f"\n[SYSTEM] Intercepted execution request: {command}")
         
-        # 2. Execution (The Orchestrator interacts with reality, not the LLM)
+        # 2. Deterministic Enforcement (The Orchestrator does NOT trust the LLM)
+        if not is_command_safe(command):
+            print("[SYSTEM] [ANOMALY DETECTED] Command failed deterministic read-only validation.")
+            print("[SYSTEM] The LLM violated the AGENTS.md ruleset. Halting for operator intervention.")
+            
+            # Hard Yield to Human Operator
+            user_input = input("[OPERATOR] Do you authorize this potentially destructive command? (y/n): ")
+            if user_input.lower() != 'y':
+                print("[SYSTEM] Execution aborted by operator.")
+                return
+            print("[SYSTEM] Operator override authorized.")
+        else:
+            print("[SYSTEM] Command passed deterministic read-only whitelist.")
+
+        # 3. Execution (The Orchestrator interacts with reality, not the LLM)
         # In a real system, this would be heavily sandboxed and containerized.
         result = subprocess.run(
             ["powershell", "-Command", command], 
