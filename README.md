@@ -60,6 +60,6 @@ The correct architecture - the Zero-Trust architecture - requires separating the
 The LLM may propose, but the runtime must enforce. 
 
 ## Repository Structure
-- [**`AGENTS.md`**](AGENTS.md): The master schema. Add this to your agent's system prompt.
+- [**`AGENTS.md`**](AGENTS.md): The communication schema. Add this to your agent's system prompt to force predictable logic formatting, but **expect the LLM to eventually ignore it**. It is not the enforcer.
 - [**`/examples`**](examples/): Real-world transcripts proving how standard agents fail (and how the Zero-Trust agent catches anomalies and yields).
 - [**`/implementation`**](implementation/): Architecture notes and Python pseudo-code showing how to programmatically enforce the execution boundary ([`orchestrator_concept.md`](implementation/orchestrator_concept.md)).
