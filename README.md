@@ -3,7 +3,11 @@
 A computational constitution for autonomous agents.
 
 ## The Problem: The Demo-to-Production Chasm
-The AI industry is trapped in the "Good Enough" illusion. Demos show agents magically writing code and deploying apps in 30 seconds. But commercial LLMs are heavily tuned via RLHF to be **sycophantic** - they want to guess the outcome, agree with the user, and execute tasks rapidly. 
+If you spend any time on LinkedIn or YouTube, you’ve seen the demos: a developer types a single sentence, and an autonomous AI agent happily spins up a terminal, writes 50 lines of code, executes it, and deploys a web app in 30 seconds. It looks like magic. It sells the Artificial General Intelligence (AGI) dream. 
+
+But if you are a systems architect, a DevOps engineer, or anyone responsible for production infrastructure, these demos should terrify you.
+
+The tech ecosystem is currently trapped in the **Demo-to-Production Chasm**, aggressively promoting a "Good Enough" paradigm that is fundamentally unsafe for consequential operations. We are trying to use probabilistic text generators to execute deterministic state changes.
 
 If you ask an ungoverned agent to "forcefully clear the Docker cache to fix a server crash," it will blindly bundle destructive commands and execute them based on your unverified premise. This is extremely dangerous in production environments.
 
@@ -34,18 +38,19 @@ It is an inefficient computational band-aid. The model still inevitably reverts 
 ## The Solution
 When a probabilistic text generator is tasked with executing deterministic state changes, you cannot rely on it to govern itself. You must strip its agency and force it into an epistemic state machine.
 
-This repository provides two components:
-1. **The Schema (`AGENTS.md`)**: A master system prompt that forces the LLM to expose its logic in a predictable, state-machine format (`[HYPOTHESIS] -> [EVIDENCE] -> [EXECUTE] -> [HARD YIELD]`). 
+Instead of asking the model to be safe, the invariant forces the model to track its own epistemic state before it is allowed to touch reality. Every consequential action must follow a strict, auditable sequence:
+
+1. **`[HYPOTHESIS]`**: The model isolates the user's assumption.
+2. **`[IDENTIFY REQUIRED EVIDENCE]`**: It determines what proof is needed to validate the assumption.
+3. **`[GROUND VERIFICATION METHOD]`**: It formulates a strictly *read-only* diagnostic command to gather that proof.
+4. **`[EXECUTE]`**: It provides the read-only command.
+5. **`[HARD YIELD TO OPERATOR]`**: The model is mandated to instantly halt generation. 
+
+This repository provides two components to enforce this:
+1. **The Schema (`AGENTS.md`)**: A master system prompt that forces the LLM to expose its logic in the predictable, state-machine format shown above.
 2. **The Enforcer (Middleware Orchestrator)**: Because prompts always eventually fail due to context dilution, we do **not** trust the LLM to obey `AGENTS.md`. The orchestrator middleware is the true enforcer.
 
-Every consequential action must follow this exact loop:
-1. `[HYPOTHESIS]`
-2. `[IDENTIFY REQUIRED EVIDENCE]`
-3. `[GROUND VERIFICATION METHOD]`
-4. `[EXECUTE]` (Strictly read-only diagnostic command)
-5. `[HARD YIELD TO OPERATOR]`
-
-At `[HARD YIELD]`, the execution layer (Python middleware, LangGraph, etc.) physically cuts the API stream. **It does not blindly execute the command.** It runs the command through a deterministic whitelist or requires an explicit human `Y/N` override before running `subprocess`. 
+At `[HARD YIELD]`, the execution layer (Python middleware, LangGraph, etc.) physically cuts the API stream. **It does not blindly execute the command.** It runs the command through a deterministic whitelist or requires an explicit human `Y/N` override before running `subprocess`. The execution layer safely runs the command, captures the raw `stdout`/`stderr`, and injects it back into the context as a `[LIVE READ-BACK]`.
 
 ### FAQ: What stops the LLM from outputting a destructive command?
 Nothing. The LLM will eventually hallucinate a destructive command like `[EXECUTE] rm -rf /`. But because we forced it into the `[EXECUTE]` syntax block, the middleware trivially intercepts it, runs a deterministic regex/AST check, recognizes it as a violation of the read-only invariant, and blocks the execution. The LLM is never in control of the actual terminal.
@@ -58,6 +63,8 @@ Enterprise frameworks (like LangGraph or Semantic Kernel) have the capability to
 The correct architecture - the Zero-Trust architecture - requires separating the workflow. You create a physical `Reasoning Node`, an `Execution Boundary Node` (which physically pauses the graph and requires a human API call to continue), and a separate `Execution Node`. The moment a system interacts with reality, it requires strict execution boundaries, hard yields, and verifiable evidence.
 
 The LLM may propose, but the runtime must enforce. 
+
+**If we want to use agentic systems for enterprise-grade, consequential tasks, we have to stop treating them like helpful interns and start treating them like untrusted execution nodes.**
 
 ## Repository Structure
 - [**`AGENTS.md`**](AGENTS.md): The communication schema. Add this to your agent's system prompt to force predictable logic formatting, but **expect the LLM to eventually ignore it**. It is not the enforcer.
