@@ -1,9 +1,9 @@
-# Zero-Trust LLM Knowledge Invariant
+﻿# Zero-Trust LLM Knowledge Invariant
 
 A computational constitution for autonomous agents.
 
 ## The Problem: The Demo-to-Production Chasm
-If you spend any time on LinkedIn or YouTube, you’ve seen the demos: a developer types a single sentence, and an autonomous AI agent happily spins up a terminal, writes 50 lines of code, executes it, and deploys a web app in 30 seconds. It looks like magic. It sells the Artificial General Intelligence (AGI) dream. 
+If you spend any time on LinkedIn or YouTube, youâ€™ve seen the demos: a developer types a single sentence, and an autonomous AI agent happily spins up a terminal, writes 50 lines of code, executes it, and deploys a web app in 30 seconds. It looks like magic. It sells the Artificial General Intelligence (AGI) dream. 
 
 But if you are a systems architect, a DevOps engineer, or anyone responsible for production infrastructure, these demos should terrify you.
 
@@ -25,7 +25,7 @@ To a probabilistic language model, that sounds perfectly logical. To a determini
 It optimizes for compliance over operational safety.
 
 ### The Prompt Engineering Fallacy
-The industry’s current solution to this is to add a few lines to a system prompt: *"Be careful. Double-check your work. Ask for permission before deleting files."*
+The industryâ€™s current solution to this is to add a few lines to a system prompt: *"Be careful. Double-check your work. Ask for permission before deleting files."*
 
 This is negligent engineering. 
 
@@ -55,6 +55,11 @@ At `[HARD YIELD]`, the execution layer (Python middleware, LangGraph, etc.) phys
 ### FAQ: What stops the LLM from outputting a destructive command?
 Nothing. The LLM will eventually hallucinate a destructive command like `[EXECUTE] rm -rf /`. But because we forced it into the `[EXECUTE]` syntax block, the middleware trivially intercepts it, runs a deterministic regex/AST check, recognizes it as a violation of the read-only invariant, and blocks the execution. The LLM is never in control of the actual terminal.
 
+### The "Human-in-the-Loop" Theater
+If you think your current AI IDE (like Cursor or Copilot Workspace) already solves this because it has a "Planner" or asks you to click "Approve" before running a terminal command, you are falling for the illusion.
+
+Breaking a task into sub-tasks (Task Decomposition) does not change the fact that the underlying "Worker Agent" executing the code is still just a probabilistic text-generator running in an unconstrained ReAct loop. And if that agent hallucinates a 40-line bash script based on an unverified premise, and the IDE pauses to ask you to click "Approve"—what are you actually approving? You are authorizing a loaded weapon blindfolded. That isn't safety; that is liability shifting.
+
 ## Stop Building Chatbots. Start Building State Machines.
 Conversational IDEs (like Copilot or Antigravity) are "chat-first." Their orchestrators are just basic loops that feed the LLM text and blindly execute whatever tool the LLM outputs. They have no physical state machine separating reasoning from execution, which is why they fail.
 
@@ -70,3 +75,4 @@ The LLM may propose, but the runtime must enforce.
 - [**`AGENTS.md`**](AGENTS.md): The communication schema. Add this to your agent's system prompt to force predictable logic formatting, but **expect the LLM to eventually ignore it**. It is not the enforcer.
 - [**`/examples`**](examples/): Real-world transcripts proving how standard agents fail (and how the Zero-Trust agent catches anomalies and yields).
 - [**`/implementation`**](implementation/): Architecture notes and Python pseudo-code showing how to programmatically enforce the execution boundary ([`orchestrator_concept.md`](implementation/orchestrator_concept.md)).
+
