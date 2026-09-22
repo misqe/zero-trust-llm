@@ -1,9 +1,9 @@
-﻿# Zero-Trust LLM Knowledge Invariant
+# Zero-Trust LLM Knowledge Invariant
 
 A computational constitution for autonomous agents.
 
 ## The Problem: The Demo-to-Production Chasm
-If you spend any time on LinkedIn or YouTube, youâ€™ve seen the demos: a developer types a single sentence, and an autonomous AI agent happily spins up a terminal, writes 50 lines of code, executes it, and deploys a web app in 30 seconds. It looks like magic. It sells the Artificial General Intelligence (AGI) dream. 
+If you spend any time on LinkedIn or YouTube, you've seen the demos: a developer types a single sentence, and an autonomous AI agent happily spins up a terminal, writes 50 lines of code, executes it, and deploys a web app in 30 seconds. It looks like magic. It sells the Artificial General Intelligence (AGI) dream. 
 
 But if you are a systems architect, a DevOps engineer, or anyone responsible for production infrastructure, these demos should terrify you.
 
@@ -25,7 +25,7 @@ To a probabilistic language model, that sounds perfectly logical. To a determini
 It optimizes for compliance over operational safety.
 
 ### The Prompt Engineering Fallacy
-The industryâ€™s current solution to this is to add a few lines to a system prompt: *"Be careful. Double-check your work. Ask for permission before deleting files."*
+The industry's current solution to this is to add a few lines to a system prompt: *"Be careful. Double-check your work. Ask for permission before deleting files."*
 
 This is negligent engineering. 
 
